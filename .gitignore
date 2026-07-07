@@ -24,3 +24,4 @@ node_modules/
 *.log
 review_results.json
 *.zip
+__pycache__/
