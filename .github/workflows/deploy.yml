@@ -3,6 +3,9 @@ name: Deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Daily at 06:00 UTC — picks up Agent's daily data updates
+    - cron: "0 6 * * *"
   workflow_dispatch:
 
 concurrency:
