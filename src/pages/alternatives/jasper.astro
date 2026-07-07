@@ -4,146 +4,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
 import Breadcrumb from '../../components/seo/Breadcrumb.astro';
 import JsonLd from '../../components/seo/JsonLd.astro';
-import type { AlternativeTool } from '../../components/alternatives/ComparisonTable.astro';
+import { getAlternativesForSource } from '../../lib/supabase';
+// 从 Supabase 拉取数据（构建时静态生成）
+const alternatives = await getAlternativesForSource('jasper');
+const sourceToolName = 'Jasper';
 
+// 空状态测试用
+const mockEmpty: typeof alternatives = [];
 
-const alternatives: AlternativeTool[] = [
-  {
-    name: 'Copy.ai',
-    slug: 'copy-ai',
-    pricingModel: 'freemium',
-    minMonthlyPrice: 36,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Content Writing', 'Workflows', 'Brand Voice', 'Sales Copy'],
-    userRating: 4.5,
-    ratingSource: 'G2',
-    ratingCount: 2400,
-    affiliateUrl: 'https://copy.ai',
-    discountPercentage: null,
-    similarityReason: 'Workflow automation for content teams',
-  },
-  {
-    name: 'Writesonic',
-    slug: 'writesonic',
-    pricingModel: 'freemium',
-    minMonthlyPrice: 16,
-    hasFreeTier: true,
-    hasFreeTrial: true,
-    features: ['Content Writing', 'SEO', 'Chat', 'AI Article Writer'],
-    userRating: 4.4,
-    ratingSource: 'G2',
-    ratingCount: 1900,
-    affiliateUrl: 'https://writesonic.com',
-    discountPercentage: null,
-    similarityReason: 'Affordable with strong SEO features',
-  },
-  {
-    name: 'Rytr',
-    slug: 'rytr',
-    pricingModel: 'freemium',
-    minMonthlyPrice: 9,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Content Writing', 'Tone Control', 'Plagiarism Check', '30+ Languages'],
-    userRating: 4.6,
-    ratingSource: 'TrustPilot',
-    ratingCount: 1500,
-    affiliateUrl: 'https://rytr.me',
-    discountPercentage: 40,
-    similarityReason: 'Budget-friendly with strong free tier',
-  },
-  {
-    name: 'ChatGPT',
-    slug: 'chatgpt',
-    pricingModel: 'subscription',
-    minMonthlyPrice: 20,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Text Generation', 'Content Writing', 'Code Assist', 'Vision'],
-    userRating: 4.7,
-    ratingSource: 'G2',
-    ratingCount: 12000,
-    affiliateUrl: 'https://chat.openai.com',
-    discountPercentage: null,
-    similarityReason: 'General-purpose but great for content drafts',
-  },
-  {
-    name: 'Claude',
-    slug: 'claude',
-    pricingModel: 'subscription',
-    minMonthlyPrice: 20,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Text Generation', 'Long Context', 'Content Writing', 'Analysis'],
-    userRating: 4.7,
-    ratingSource: 'G2',
-    ratingCount: 3200,
-    affiliateUrl: 'https://claude.ai',
-    discountPercentage: null,
-    similarityReason: 'Excellent for long-form content and analysis',
-  },
-  {
-    name: 'Anyword',
-    slug: 'anyword',
-    pricingModel: 'subscription',
-    minMonthlyPrice: 49,
-    hasFreeTier: false,
-    hasFreeTrial: true,
-    features: ['Predictive Performance', 'Content Writing', 'Ad Copy', 'Blog Posts'],
-    userRating: 4.3,
-    ratingSource: 'Capterra',
-    ratingCount: 860,
-    affiliateUrl: 'https://anyword.com',
-    discountPercentage: null,
-    similarityReason: 'Predictive scoring for content performance',
-  },
-  {
-    name: 'Wordtune',
-    slug: 'wordtune',
-    pricingModel: 'freemium',
-    minMonthlyPrice: 13.99,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Rewrite', 'Tone Adjust', 'Summarize', 'Browser Extension'],
-    userRating: 4.5,
-    ratingSource: 'G2',
-    ratingCount: 1100,
-    affiliateUrl: 'https://wordtune.com',
-    discountPercentage: 20,
-    similarityReason: 'Best rewrite and tone adjustment tool',
-  },
-  {
-    name: 'Grammarly',
-    slug: 'grammarly',
-    pricingModel: 'freemium',
-    minMonthlyPrice: 12,
-    hasFreeTier: true,
-    hasFreeTrial: false,
-    features: ['Grammar Check', 'Tone Detection', 'Plagiarism', 'AI Writing'],
-    userRating: 4.7,
-    ratingSource: 'G2',
-    ratingCount: 15000,
-    affiliateUrl: 'https://grammarly.com',
-    discountPercentage: null,
-    similarityReason: 'Editing and writing assistance combined',
-  },
-  {
-    name: 'Surfer SEO',
-    slug: 'surfer-seo',
-    pricingModel: 'subscription',
-    minMonthlyPrice: 69,
-    hasFreeTier: false,
-    hasFreeTrial: false,
-    features: ['SEO Analysis', 'AI Writer', 'Content Planner', 'SERP Analyzer'],
-    userRating: 4.4,
-    ratingSource: 'G2',
-    ratingCount: 1300,
-    affiliateUrl: 'https://surferseo.com',
-    discountPercentage: null,
-    similarityReason: 'Content + SEO in one platform',
-  },
-];
 ---
 
 <BaseLayout
@@ -185,7 +53,7 @@ const alternatives: AlternativeTool[] = [
       <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
         Top Alternatives
       </h2>
-      <ComparisonTable sourceToolName="Jasper" alternatives={alternatives} />
+      <ComparisonTable sourceToolName={sourceToolName} alternatives={alternatives} />
     </section>
   </article>
 </BaseLayout>
