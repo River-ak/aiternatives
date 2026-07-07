@@ -1,0 +1,76 @@
+---
+// =============================================================================
+// Footer.astro — 全局页脚
+// =============================================================================
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer
+  class="border-t mt-16 py-12 px-4"
+  style="border-color: rgba(0,0,0,0.06);"
+>
+  <div class="max-w-7xl mx-auto">
+    <!-- 主体区域 -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-10">
+      <!-- 品牌列 -->
+      <div class="flex flex-col gap-3">
+        <a href="/" class="flex items-center gap-2" aria-label="aiternatives home">
+          <svg width="20" height="20" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+            <rect width="32" height="32" rx="6" fill="#5c6cf0"/>
+            <path d="M10 22h12M10 17h8M10 12h4" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span class="text-[14px] font-semibold tracking-[-0.3px] text-[var(--text-primary)]">
+            aiternatives
+          </span>
+        </a>
+        <p class="text-[13px] text-[var(--text-tertiary)] leading-relaxed">
+          Find the best AI tool alternatives. Compare pricing, features, and ratings in one place.
+        </p>
+      </div>
+
+      <!-- 导航链接组 1 -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-[13px] font-semibold text-[var(--text-primary)] uppercase tracking-[0.04em] mb-1">
+          Explore
+        </h3>
+        <a href="/alternatives/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">All Alternatives</a>
+        <a href="/deals/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">Latest Deals</a>
+        <a href="/categories/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">Categories</a>
+      </div>
+
+      <!-- 导航链接组 2 -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-[13px] font-semibold text-[var(--text-primary)] uppercase tracking-[0.04em] mb-1">
+          Popular
+        </h3>
+        <a href="/alternatives/chatgpt/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">ChatGPT Alternatives</a>
+        <a href="/alternatives/midjourney/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">Midjourney Alternatives</a>
+        <a href="/alternatives/jasper/" class="text-[14px] text-[var(--text-tertiary)] hover:text-[var(--text-secondary)] transition-colors">Jasper Alternatives</a>
+      </div>
+
+      <!-- 导航链接组 3 -->
+      <div class="flex flex-col gap-2">
+        <h3 class="text-[13px] font-semibold text-[var(--text-primary)] uppercase tracking-[0.04em] mb-1">
+          About
+        </h3>
+        <span class="text-[14px] text-[var(--text-tertiary)]">Affiliate Disclosure</span>
+        <span class="text-[14px] text-[var(--text-tertiary)]">Privacy</span>
+        <span class="text-[14px] text-[var(--text-tertiary)]">Contact</span>
+      </div>
+    </div>
+
+    <!-- 底部：版权 + 免责声明 -->
+    <div
+      class="pt-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-3"
+      style="border-top: 1px solid rgba(0,0,0,0.06);"
+    >
+      <p class="text-[12px] text-[var(--text-tertiary)]">
+        &copy; {currentYear} aiternatives. All rights reserved.
+      </p>
+      <p class="text-[12px] text-[var(--text-disabled)] max-w-md leading-relaxed">
+        Some links on this site are affiliate links. If you make a purchase through these links, we may earn a commission at no additional cost to you.
+      </p>
+    </div>
+  </div>
+</footer>

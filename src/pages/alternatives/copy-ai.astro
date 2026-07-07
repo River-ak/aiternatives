@@ -1,0 +1,176 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import type { AlternativeTool } from '../../components/alternatives/ComparisonTable.astro';
+
+
+const alternatives: AlternativeTool[] = [
+  {
+    name: 'Jasper',
+    slug: 'jasper',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 49,
+    hasFreeTier: false,
+    hasFreeTrial: true,
+    features: ['Content Writing', 'Brand Voice', 'SEO', 'Campaigns', 'Image Gen'],
+    userRating: 4.0,
+    ratingSource: 'Capterra',
+    ratingCount: 1800,
+    affiliateUrl: 'https://jasper.ai',
+    discountPercentage: 25,
+    similarityReason: 'Marketing-focused with built-in campaigns',
+  },
+  {
+    name: 'Writesonic',
+    slug: 'writesonic',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 16,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Content Writing', 'SEO', 'Chat', 'AI Article Writer'],
+    userRating: 4.4,
+    ratingSource: 'G2',
+    ratingCount: 1900,
+    affiliateUrl: 'https://writesonic.com',
+    discountPercentage: null,
+    similarityReason: 'More affordable with free trial',
+  },
+  {
+    name: 'Rytr',
+    slug: 'rytr',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 9,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Content Writing', 'Tone Control', 'Plagiarism Check', '30+ Languages'],
+    userRating: 4.6,
+    ratingSource: 'TrustPilot',
+    ratingCount: 1500,
+    affiliateUrl: 'https://rytr.me',
+    discountPercentage: 40,
+    similarityReason: 'Cheapest option with decent output',
+  },
+  {
+    name: 'ChatGPT',
+    slug: 'chatgpt',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 20,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Text Generation', 'Content Writing', 'Code Assist', 'Vision', 'Plugins'],
+    userRating: 4.7,
+    ratingSource: 'G2',
+    ratingCount: 12000,
+    affiliateUrl: 'https://chat.openai.com',
+    discountPercentage: null,
+    similarityReason: 'Most flexible general-purpose alternative',
+  },
+  {
+    name: 'Claude',
+    slug: 'claude',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 20,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Text Generation', 'Long Context', 'Content Writing', 'Analysis'],
+    userRating: 4.7,
+    ratingSource: 'G2',
+    ratingCount: 3200,
+    affiliateUrl: 'https://claude.ai',
+    discountPercentage: null,
+    similarityReason: 'Better for nuanced long-form content',
+  },
+  {
+    name: 'Anyword',
+    slug: 'anyword',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 49,
+    hasFreeTier: false,
+    hasFreeTrial: true,
+    features: ['Predictive Performance', 'Content Writing', 'Ad Copy', 'Blog Posts'],
+    userRating: 4.3,
+    ratingSource: 'Capterra',
+    ratingCount: 860,
+    affiliateUrl: 'https://anyword.com',
+    discountPercentage: null,
+    similarityReason: 'Predictive scoring similar to Copy.ai workflows',
+  },
+  {
+    name: 'Wordtune',
+    slug: 'wordtune',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 13.99,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Rewrite', 'Tone Adjust', 'Summarize', 'Browser Extension'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 1100,
+    affiliateUrl: 'https://wordtune.com',
+    discountPercentage: 20,
+    similarityReason: 'Rewrite-focused complement to Copy.ai',
+  },
+  {
+    name: 'Simplified',
+    slug: 'simplified',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 18,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Content Writing', 'Design', 'Social Media', 'Video Editing'],
+    userRating: 4.4,
+    ratingSource: 'G2',
+    ratingCount: 2300,
+    affiliateUrl: 'https://simplified.com',
+    discountPercentage: null,
+    similarityReason: 'All-in-one content creation platform',
+  },
+];
+---
+
+<BaseLayout
+  title="Copy.ai Alternatives — 8 Best AI Content Writing Tools Compared"
+  description="Compare Copy.ai alternatives side by side. Pricing, features, ratings for Jasper, Writesonic, Rytr, ChatGPT, Claude, and more AI writing tools."
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Alternatives', href: '/alternatives/' },
+      { label: 'Copy.ai Alternatives', href: '/alternatives/copy-ai/' },
+    ]}
+  />
+
+  <article class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        Copy.ai Alternatives
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        Copy.ai offers powerful workflow automation for content teams, but it is not the only player. Compare 8 alternatives with different pricing, features, and specializations.
+      </p>
+    </header>
+
+    <!-- JSON-LD 结构化数据 -->
+    <JsonLd
+      type="product"
+      products={alternatives.map((alt) => ({
+        name: alt.name,
+        description: alt.similarityReason || `Alternative to Copy.ai`,
+        ratingValue: alt.userRating || 0,
+        reviewCount: alt.ratingCount,
+        ...(alt.minMonthlyPrice ? { price: String(alt.minMonthlyPrice) } : {}),
+        url: `/go/${alt.slug}/`,
+      }))}
+    />
+
+    <section class="mb-16">
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Top Alternatives
+      </h2>
+      <ComparisonTable sourceToolName="Copy.ai" alternatives={alternatives} />
+    </section>
+  </article>
+</BaseLayout>

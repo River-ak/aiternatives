@@ -1,0 +1,191 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import type { AlternativeTool } from '../../components/alternatives/ComparisonTable.astro';
+
+
+const alternatives: AlternativeTool[] = [
+  {
+    name: 'Coda AI',
+    slug: 'coda-ai',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 12,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['AI Assistant', 'Documents', 'Databases', 'Automations'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 1800,
+    affiliateUrl: 'https://coda.io',
+    discountPercentage: null,
+    similarityReason: 'Docs + databases + AI in one',
+  },
+  {
+    name: 'ClickUp AI',
+    slug: 'clickup-ai',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 5,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Project Management', 'AI Writing', 'Task Automation', 'Docs'],
+    userRating: 4.6,
+    ratingSource: 'G2',
+    ratingCount: 5200,
+    affiliateUrl: 'https://clickup.com',
+    discountPercentage: 20,
+    similarityReason: 'Project management with built-in AI',
+  },
+  {
+    name: 'Mem',
+    slug: 'mem',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 14.99,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['AI Notes', 'Auto-Organization', 'Search', 'Collections'],
+    userRating: 4.4,
+    ratingSource: 'ProductHunt',
+    ratingCount: 1200,
+    affiliateUrl: 'https://mem.ai',
+    discountPercentage: null,
+    similarityReason: 'AI-first note-taking experience',
+  },
+  {
+    name: 'Taskade',
+    slug: 'taskade',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 8,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['AI Assistant', 'Mind Maps', 'Task Management', 'Collaboration'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 960,
+    affiliateUrl: 'https://taskade.com',
+    discountPercentage: 30,
+    similarityReason: 'Visual planning with AI integration',
+  },
+  {
+    name: 'Craft',
+    slug: 'craft',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 8,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Documents', 'AI Assistant', 'Collaboration', 'Beautiful UI'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 750,
+    affiliateUrl: 'https://craft.do',
+    discountPercentage: null,
+    similarityReason: 'Beautiful document editor with AI',
+  },
+  {
+    name: 'Obsidian',
+    slug: 'obsidian',
+    pricingModel: 'free',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Markdown', 'Knowledge Graph', 'Plugins', 'Local-first'],
+    userRating: 4.7,
+    ratingSource: 'G2',
+    ratingCount: 3200,
+    affiliateUrl: 'https://obsidian.md',
+    discountPercentage: null,
+    similarityReason: 'Local-first knowledge management with AI plugins',
+  },
+  {
+    name: 'Reflect',
+    slug: 'reflect',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 10,
+    hasFreeTier: false,
+    hasFreeTrial: true,
+    features: ['AI Notes', 'Daily Notes', 'Backlinks', 'End-to-End Encryption'],
+    userRating: 4.3,
+    ratingSource: 'ProductHunt',
+    ratingCount: 680,
+    affiliateUrl: 'https://reflect.app',
+    discountPercentage: null,
+    similarityReason: 'Privacy-focused with GPT-4 integration',
+  },
+  {
+    name: 'Anytype',
+    slug: 'anytype',
+    pricingModel: 'freemium',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Objects', 'Graph View', 'Offline-first', 'Open Source'],
+    userRating: 4.2,
+    ratingSource: 'ProductHunt',
+    ratingCount: 1400,
+    affiliateUrl: 'https://anytype.io',
+    discountPercentage: null,
+    similarityReason: 'Open source Notion alternative',
+  },
+  {
+    name: 'Albus',
+    slug: 'albus',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 15,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['AI Boards', 'Research', 'Content Creation', 'Team Workspace'],
+    userRating: 4.1,
+    ratingSource: 'ProductHunt',
+    ratingCount: 420,
+    affiliateUrl: 'https://albus.org',
+    discountPercentage: 50,
+    similarityReason: 'AI-powered research and content boards',
+  },
+];
+---
+
+<BaseLayout
+  title="Notion AI Alternatives — 9 Best AI Productivity Tools Compared"
+  description="Find the best Notion AI alternatives. Compare AI-powered productivity tools including Coda AI, ClickUp AI, Mem, Taskade, and more with pricing, features, and ratings."
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Alternatives', href: '/alternatives/' },
+      { label: 'Notion AI Alternatives', href: '/alternatives/notion-ai/' },
+    ]}
+  />
+
+  <article class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        Notion AI Alternatives
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        Notion AI brings intelligence to your workspace, but there are powerful alternatives for every workflow. Compare 9 AI productivity tools with detailed pricing and feature breakdowns.
+      </p>
+    </header>
+
+    <!-- JSON-LD 结构化数据 -->
+    <JsonLd
+      type="product"
+      products={alternatives.map((alt) => ({
+        name: alt.name,
+        description: alt.similarityReason || `Alternative to Notion AI`,
+        ratingValue: alt.userRating || 0,
+        reviewCount: alt.ratingCount,
+        ...(alt.minMonthlyPrice ? { price: String(alt.minMonthlyPrice) } : {}),
+        url: `/go/${alt.slug}/`,
+      }))}
+    />
+
+    <section class="mb-16">
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Top Alternatives
+      </h2>
+      <ComparisonTable sourceToolName="Notion AI" alternatives={alternatives} />
+    </section>
+  </article>
+</BaseLayout>

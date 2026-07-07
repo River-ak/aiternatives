@@ -1,0 +1,25 @@
+{
+  "name": "aiternatives",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build && npx pagefind --site dist",
+    "build:noindex": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@supabase/supabase-js": "^2.49.4",
+    "astro": "^5.7.10",
+    "gsap": "^3.12.7",
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.1.11",
+    "pagefind": "^1.5.2",
+    "tailwindcss": "^4.1.11"
+  }
+}

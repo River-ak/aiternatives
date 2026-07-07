@@ -1,0 +1,393 @@
+---
+// =============================================================================
+// ComparisonTable.astro — AI 工具替代方案结构化对比表
+// =============================================================================
+// 核心组件，用于 /alternatives/[slug]/ 页面
+// 展示 5-15 个替代工具的多维度对比
+//
+// 动画系统：GSAP + ScrollTrigger
+//   - 滚动触发行交错渐现（opacity + translateY）
+//   - expo.out 物理阻尼缓动（Apple 级别质感）
+//   - 仅使用 GPU 友好属性（transform, opacity）
+//   - 严格禁用 backdrop-filter
+//   - prefers-reduced-motion 全量禁用动画
+// =============================================================================
+
+export interface AlternativeTool {
+  name: string;
+  slug: string;
+  logoUrl?: string | null;
+  pricingModel: 'freemium' | 'subscription' | 'one_time' | 'usage_based' | 'free';
+  minMonthlyPrice: number | null;
+  hasFreeTier: boolean;
+  hasFreeTrial: boolean;
+  features: string[];
+  userRating: number | null;
+  ratingSource?: string | null;
+  ratingCount: number;
+  affiliateUrl: string;
+  discountPercentage?: number | null;
+  similarityReason?: string;
+}
+
+export interface Props {
+  sourceToolName: string;
+  alternatives: AlternativeTool[];
+}
+
+const { sourceToolName, alternatives } = Astro.props as Props;
+
+// 辅助：格式化定价展示
+function formatPricing(model: string, minPrice: number | null, freeTier: boolean): string {
+  if (model === 'free') return 'Free';
+  if (freeTier && minPrice === null) return 'Freemium';
+  if (minPrice === null) return '—';
+
+  const display = `$${minPrice}/mo`;
+  if (model === 'freemium') return `From ${display}`;
+  return display;
+}
+
+function pricingLabel(model: string): string {
+  const labels: Record<string, string> = {
+    freemium: 'Freemium',
+    subscription: 'Subscription',
+    one_time: 'One-time',
+    usage_based: 'Usage-based',
+    free: 'Free',
+  };
+  return labels[model] || model;
+}
+
+// 辅助：评分颜色等级
+function ratingColorClass(rating: number | null): string {
+  if (rating === null) return 'text-[var(--text-tertiary)]';
+  if (rating >= 4.0) return 'text-[var(--rating-high)]';
+  if (rating >= 3.0) return 'text-[var(--rating-mid)]';
+  return 'text-[var(--rating-low)]';
+}
+
+function formatRating(rating: number | null): string {
+  if (rating === null) return '—';
+  return rating.toFixed(1);
+}
+
+// 空状态判定
+const hasNoData = alternatives.length === 0;
+---
+
+<div class="comparison-table-wrapper w-full" data-component="comparison-table">
+  <!-- 移动端滚动提示 -->
+  <div class="scroll-hint md:hidden mb-2 text-xs text-[var(--text-tertiary)] flex items-center gap-1.5">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M5 12h14"/>
+      <path d="m12 5 7 7-7 7"/>
+    </svg>
+    <span>Scroll to compare →</span>
+  </div>
+
+  <!-- 表格容器 -->
+  <div
+    class="table-scroll-container overflow-x-auto rounded-lg shadow-[var(--shadow-border)]"
+    role="region"
+    aria-label={`${sourceToolName} alternatives comparison table`}
+    tabindex="0"
+  >
+    <table class="comparison-table w-full min-w-[720px] border-collapse">
+      <!-- 表头 -->
+      <thead>
+        <tr class="sticky-header">
+          <th class="col-tool sticky left-0 z-20 bg-white text-left py-3 px-4 text-[13px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)] shadow-header-border" scope="col">
+            Tool
+          </th>
+          <th class="col-pricing text-left py-3 px-4 text-[13px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)] shadow-header-border" scope="col">
+            Pricing
+          </th>
+          <th class="col-features text-left py-3 px-4 text-[13px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)] shadow-header-border" scope="col">
+            Features
+          </th>
+          <th class="col-rating text-center py-3 px-4 text-[13px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)] shadow-header-border" scope="col">
+            Rating
+          </th>
+          <th class="col-action text-center py-3 px-4 text-[13px] font-medium uppercase tracking-[0.05em] text-[var(--text-tertiary)] shadow-header-border" scope="col">
+            Visit
+          </th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {
+          hasNoData ? (
+            <tr>
+              <td colspan="5" class="py-16 px-4 text-center text-[var(--text-tertiary)]">
+                <div class="flex flex-col items-center gap-3">
+                  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--text-disabled)]" aria-hidden="true">
+                    <circle cx="12" cy="12" r="10"/>
+                    <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                    <line x1="9" y1="9" x2="9.01" y2="9"/>
+                    <line x1="15" y1="9" x2="15.01" y2="9"/>
+                  </svg>
+                  <p class="text-[15px]">No alternatives available yet for {sourceToolName}.</p>
+                  <p class="text-[13px]">Check back soon or browse other comparison pages.</p>
+                </div>
+              </td>
+            </tr>
+          ) : (
+            alternatives.map((alt, index) => (
+              <tr
+                class:list={['table-row', 'group', 'transition-colors', 'duration-150', { 'row-zebra': index % 2 === 1 }]}
+                data-row-index={index}
+              >
+                <!-- 工具名列（Sticky Left） -->
+                <td class="col-tool sticky left-0 z-10 py-3 px-4 flex items-center gap-3 min-w-[200px]" scope="row" style="background-color: inherit;">
+                  <!-- Logo 插槽 -->
+                  <div class="tool-logo-slot w-8 h-8 rounded-[6px] flex-shrink-0 overflow-hidden bg-[#f3f4f6] flex items-center justify-center">
+                    {alt.logoUrl ? (
+                      <img
+                        src={alt.logoUrl}
+                        alt={`${alt.name} logo`}
+                        width="32"
+                        height="32"
+                        loading="lazy"
+                        class="w-8 h-8 object-contain"
+                      />
+                    ) : (
+                      <span class="text-[11px] font-medium text-[var(--text-tertiary)]">
+                        {alt.name.charAt(0).toUpperCase()}
+                      </span>
+                    )}
+                  </div>
+
+                  <!-- 工具名 + 折扣徽章 -->
+                  <div class="flex flex-col min-w-0">
+                    <div class="flex items-center gap-2 min-w-0">
+                      <span class="text-[15px] font-medium text-[var(--text-primary)] truncate">
+                        {alt.name}
+                      </span>
+                      {
+                        alt.discountPercentage != null && alt.discountPercentage > 0 && (
+                          <span class="discount-badge inline-flex items-center px-[7px] py-[1px] rounded text-[11px] font-medium leading-[1.3] flex-shrink-0 bg-[var(--discount-bg)] text-[var(--discount-text)] border border-[var(--discount-border)]">
+                            {alt.discountPercentage}% OFF
+                          </span>
+                        )
+                      }
+                    </div>
+                    {alt.similarityReason && (
+                      <span class="text-[12px] text-[var(--text-tertiary)] leading-tight mt-0.5 truncate">
+                        {alt.similarityReason}
+                      </span>
+                    )}
+                  </div>
+                </td>
+
+                <!-- 定价列 -->
+                <td class="col-pricing py-3 px-4 min-w-[140px]">
+                  <div class="flex flex-col">
+                    <span class="text-[15px] font-medium text-[var(--text-primary)] font-tnum">
+                      {formatPricing(alt.pricingModel, alt.minMonthlyPrice, alt.hasFreeTier)}
+                    </span>
+                    <span class="text-[12px] text-[var(--text-tertiary)] font-tnum">
+                      {pricingLabel(alt.pricingModel)}
+                      {alt.hasFreeTrial && ' · Free trial'}
+                    </span>
+                  </div>
+                </td>
+
+                <!-- 功能列 -->
+                <td class="col-features py-3 px-4 min-w-[180px]">
+                  <div class="flex flex-wrap gap-1.5">
+                    {alt.features.slice(0, 4).map((feature) => (
+                      <span class="feature-tag inline-flex items-center px-2 py-[2px] rounded text-[12px] leading-tight bg-[#f3f4f6] text-[var(--text-secondary)]">
+                        {feature}
+                      </span>
+                    ))}
+                    {alt.features.length > 4 && (
+                      <span
+                        class="feature-tag inline-flex items-center px-2 py-[2px] rounded text-[12px] leading-tight bg-[#f3f4f6] text-[var(--text-tertiary)]"
+                        title={alt.features.slice(4).join(', ')}
+                      >
+                        +{alt.features.length - 4} more
+                      </span>
+                    )}
+                  </div>
+                </td>
+
+                <!-- 评分列 -->
+                <td class="col-rating py-3 px-4 text-center min-w-[100px]">
+                  <div class="flex flex-col items-center gap-0.5">
+                    <span class={`rating-value text-[15px] font-medium font-tnum inline-flex items-center gap-1 ${ratingColorClass(alt.userRating)}`}>
+                      {formatRating(alt.userRating)}
+                      {alt.userRating !== null && (
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                      )}
+                    </span>
+                    {alt.ratingSource && alt.userRating !== null && (
+                      <span class="text-[11px] text-[var(--text-tertiary)]">
+                        {alt.ratingSource}{alt.ratingCount > 0 ? ` (${alt.ratingCount})` : ''}
+                      </span>
+                    )}
+                  </div>
+                </td>
+
+                <!-- 操作列（Visit 按钮） -->
+                <td class="col-action py-3 px-4 text-center min-w-[110px]">
+                  <a
+                    href={`/go/${alt.slug}/`}
+                    class="visit-btn inline-flex items-center gap-1.5 px-[18px] py-2 rounded-md text-[14px] font-medium text-white transition-all duration-200 bg-[var(--accent)] hover:bg-[var(--accent-hover)] active:scale-[0.98] hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent-ring)]"
+                    rel="nofollow sponsored"
+                    data-affiliate-slug={alt.slug}
+                    aria-label={`Visit ${alt.name} website`}
+                  >
+                    Visit
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <line x1="5" y1="12" x2="19" y2="12"/>
+                      <polyline points="12 5 19 12 12 19"/>
+                    </svg>
+                  </a>
+                </td>
+              </tr>
+            ))
+          )
+        }
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<style>
+  /* =========================================================================
+     CSS 层 — 组件级静态样式
+     ========================================================================= */
+
+  .table-scroll-container {
+    overflow: hidden;
+  }
+
+  /* 表头底部分隔线（shadow-as-border 技法） */
+  .shadow-header-border {
+    box-shadow: 0 1px 0 0 rgba(0, 0, 0, 0.06);
+  }
+
+  /* 粘性表头 */
+  .sticky-header th {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: #ffffff;
+  }
+
+  /* 斑马纹 */
+  .row-zebra {
+    background: #f8f9fb;
+  }
+
+  .table-row:hover {
+    background: #f3f4f6;
+  }
+
+  /* 粘性左列背景继承 */
+  .table-row .col-tool {
+    background-color: inherit;
+  }
+  .row-zebra .col-tool {
+    background-color: #f8f9fb;
+  }
+  .table-row:hover .col-tool {
+    background-color: #f3f4f6;
+  }
+  .sticky-header .col-tool {
+    background: #ffffff;
+  }
+
+  /* 移动端 sticky 左列滚动阴影提示 */
+  @media (max-width: 639px) {
+    .col-tool::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      right: -8px;
+      bottom: 0;
+      width: 8px;
+      background: linear-gradient(to right, rgba(0, 0, 0, 0.04), transparent);
+      pointer-events: none;
+    }
+  }
+
+  /* 折扣徽章呼吸动画 */
+  .discount-badge {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+  @keyframes badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .discount-badge {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
+
+  function initComparisonTableAnimations() {
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isMobile = window.matchMedia('(max-width: 639px)').matches;
+
+    if (prefersReduced || isMobile) {
+      document.querySelectorAll('.table-row').forEach((row) => {
+        (row as HTMLElement).style.opacity = '1';
+        (row as HTMLElement).style.transform = 'none';
+      });
+      return;
+    }
+
+    const rows = gsap.utils.toArray<HTMLElement>('.table-row');
+    const tableWrapper = document.querySelector('[data-component="comparison-table"]');
+
+    if (!tableWrapper || rows.length === 0) return;
+
+    gsap.set(rows, { opacity: 0, y: 20 });
+
+    const tween = gsap.to(rows, {
+      opacity: 1,
+      y: 0,
+      duration: 0.55,
+      ease: 'expo.out',
+      stagger: 0.06,
+      scrollTrigger: {
+        trigger: tableWrapper,
+        start: 'top 85%',
+        end: 'bottom 20%',
+        toggleActions: 'play none none none',
+      },
+    });
+
+    // 图片懒加载完成后刷新 ScrollTrigger
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener('load', handleLoad);
+
+    // 监听动效偏好变化
+    const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handleMotionChange = (e: MediaQueryListEvent) => {
+      if (e.matches) {
+        tween.kill();
+        gsap.set(rows, { opacity: 1, y: 0, clearProps: 'all' });
+        ScrollTrigger.getAll().forEach((st) => st.kill());
+        window.removeEventListener('load', handleLoad);
+        motionQuery.removeEventListener('change', handleMotionChange);
+      }
+    };
+    motionQuery.addEventListener('change', handleMotionChange);
+  }
+
+  requestAnimationFrame(() => {
+    initComparisonTableAnimations();
+  });
+</script>

@@ -1,0 +1,151 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import DealCard from '../../components/deals/DealCard.astro';
+import type { DealInfo } from '../../components/deals/DealCard.astro';
+
+// 模拟折扣数据——实际场景从 Supabase 拉取
+const deals: DealInfo[] = [
+  {
+    toolName: 'Rytr',
+    toolSlug: 'rytr',
+    title: 'Annual plan 40% off — unlimited AI writing',
+    originalPrice: 29,
+    dealPrice: 17.4,
+    discountPercentage: 40,
+    couponCode: 'RYTR40',
+    dealUrl: 'https://rytr.me',
+    source: 'official',
+    expiresAt: '2026-07-31',
+  },
+  {
+    toolName: 'Leonardo AI',
+    toolSlug: 'leonardo-ai',
+    title: 'Pro plan — 25% off first 3 months',
+    originalPrice: 48,
+    dealPrice: 36,
+    discountPercentage: 25,
+    dealUrl: 'https://leonardo.ai',
+    source: 'appsumo',
+    expiresAt: '2026-07-25',
+  },
+  {
+    toolName: 'Taskade',
+    toolSlug: 'taskade',
+    title: 'Team plan — 30% off annual billing',
+    originalPrice: 19,
+    dealPrice: 13.3,
+    discountPercentage: 30,
+    dealUrl: 'https://taskade.com',
+    source: 'reddit',
+    expiresAt: '2026-08-15',
+  },
+  {
+    toolName: 'Recraft',
+    toolSlug: 'recraft',
+    title: 'Pro annual — save 30% lifetime',
+    originalPrice: 144,
+    dealPrice: 100.8,
+    discountPercentage: 30,
+    couponCode: 'RECRAFT30',
+    dealUrl: 'https://recraft.ai',
+    source: 'official',
+    expiresAt: '2026-07-20',
+  },
+  {
+    toolName: 'Albus',
+    toolSlug: 'albus',
+    title: 'Launch deal — 50% off forever plan',
+    originalPrice: 99,
+    dealPrice: 49.5,
+    discountPercentage: 50,
+    dealUrl: 'https://albus.org',
+    source: 'appsumo',
+    expiresAt: '2026-07-18',
+  },
+  {
+    toolName: 'Jasper',
+    toolSlug: 'jasper',
+    title: 'Creator plan — 25% off annual',
+    originalPrice: 588,
+    dealPrice: 441,
+    discountPercentage: 25,
+    couponCode: 'JASPER25',
+    dealUrl: 'https://jasper.ai',
+    source: 'twitter',
+    expiresAt: '2026-07-22',
+  },
+  {
+    toolName: 'Wordtune',
+    toolSlug: 'wordtune',
+    title: 'Premium — 20% off monthly',
+    originalPrice: 24.99,
+    dealPrice: 19.99,
+    discountPercentage: 20,
+    dealUrl: 'https://wordtune.com',
+    source: 'official',
+    expiresAt: '2026-08-01',
+  },
+  {
+    toolName: 'ClickUp AI',
+    toolSlug: 'clickup-ai',
+    title: 'Unlimited plan — 20% off first year',
+    originalPrice: 7,
+    dealPrice: 5.6,
+    discountPercentage: 20,
+    couponCode: 'CLICKUP20',
+    dealUrl: 'https://clickup.com',
+    source: 'twitter',
+    expiresAt: '2026-07-28',
+  },
+];
+---
+
+<BaseLayout
+  title="AI Tool Deals & Discounts — Save on AI Software Today"
+  description="Find the latest discounts and deals on AI tools. Active coupons, promo codes, and limited-time offers from top AI SaaS products."
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Deals', href: '/deals/' },
+    ]}
+  />
+
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        AI Tool Deals
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        Active discounts and promo codes for AI tools. Updated daily from official sources, AppSumo, Reddit, and Twitter.
+      </p>
+    </header>
+
+    <!-- 折扣卡片网格 -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      {deals.map((deal) => (
+        <DealCard deal={deal} />
+      ))}
+    </div>
+
+    <!-- 空状态 -->
+    {deals.length === 0 && (
+      <div class="py-20 text-center text-[var(--text-tertiary)]">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="mx-auto mb-4 text-[var(--text-disabled)]" aria-hidden="true">
+          <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/>
+          <path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/>
+          <path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/>
+        </svg>
+        <p class="text-[15px]">No active deals right now.</p>
+        <p class="text-[13px] mt-1">Check back soon — new deals are added daily.</p>
+      </div>
+    )}
+
+    <!-- 免责声明 -->
+    <div class="mt-12 p-4 rounded-lg bg-[var(--bg-subtle)] text-[12px] text-[var(--text-tertiary)] leading-relaxed">
+      <strong class="text-[var(--text-secondary)]">Affiliate Disclosure:</strong> Some deals on this page use affiliate links. If you make a purchase, we may earn a commission at no extra cost to you. Deals are checked daily but may expire without notice — always verify on the official site.
+    </div>
+  </main>
+</BaseLayout>

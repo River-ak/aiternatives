@@ -1,0 +1,268 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import type { AlternativeTool } from '../../components/alternatives/ComparisonTable.astro';
+
+
+// 模拟数据——实际场景从 Supabase 拉取
+const mockAlternatives: AlternativeTool[] = [
+  {
+    name: 'Claude',
+    slug: 'claude',
+    logoUrl: null,
+    pricingModel: 'subscription',
+    minMonthlyPrice: 20,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Text Generation', 'Code Assist', 'Long Context', 'Vision', 'Projects'],
+    userRating: 4.7,
+    ratingSource: 'G2',
+    ratingCount: 1250,
+    affiliateUrl: 'https://claude.ai',
+    discountPercentage: null,
+    similarityReason: 'Most direct alternative with comparable reasoning',
+  },
+  {
+    name: 'Gemini',
+    slug: 'gemini',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: 19.99,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Multimodal', 'Text Generation', 'Code Assist', 'Google Integration'],
+    userRating: 4.3,
+    ratingSource: 'TrustPilot',
+    ratingCount: 890,
+    affiliateUrl: 'https://gemini.google.com',
+    discountPercentage: null,
+    similarityReason: 'Google ecosystem integration',
+  },
+  {
+    name: 'Perplexity',
+    slug: 'perplexity',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: 20,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Web Search', 'Citations', 'Pro Search', 'File Upload', 'API Access'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 2100,
+    affiliateUrl: 'https://perplexity.ai',
+    discountPercentage: 50,
+    similarityReason: 'Research-focused with verified sources',
+  },
+  {
+    name: 'Mistral',
+    slug: 'mistral',
+    logoUrl: null,
+    pricingModel: 'usage_based',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Open Source', 'Text Generation', 'Code Assist', 'Fine-tuning'],
+    userRating: 4.1,
+    ratingSource: 'ProductHunt',
+    ratingCount: 450,
+    affiliateUrl: 'https://mistral.ai',
+    discountPercentage: null,
+    similarityReason: 'European open-weight alternative',
+  },
+  {
+    name: 'Cohere',
+    slug: 'cohere',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Text Generation', 'Embeddings', 'RAG', 'Enterprise'],
+    userRating: 4.2,
+    ratingSource: 'G2',
+    ratingCount: 680,
+    affiliateUrl: 'https://cohere.com',
+    discountPercentage: null,
+    similarityReason: 'Enterprise-focused with strong embeddings',
+  },
+  {
+    name: 'DeepSeek',
+    slug: 'deepseek',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Text Generation', 'Code Assist', 'Reasoning', 'Open Source'],
+    userRating: 4.6,
+    ratingSource: 'ProductHunt',
+    ratingCount: 3200,
+    affiliateUrl: 'https://deepseek.com',
+    discountPercentage: 30,
+    similarityReason: 'Open source with strong reasoning capabilities',
+  },
+  {
+    name: 'Copilot',
+    slug: 'copilot',
+    logoUrl: null,
+    pricingModel: 'subscription',
+    minMonthlyPrice: 30,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Code Assist', 'Text Generation', 'IDE Integration', 'Office Suite'],
+    userRating: 4.3,
+    ratingSource: 'G2',
+    ratingCount: 5600,
+    affiliateUrl: 'https://github.com/features/copilot',
+    discountPercentage: null,
+    similarityReason: 'Deep code and office integration',
+  },
+  {
+    name: 'Jasper',
+    slug: 'jasper',
+    logoUrl: null,
+    pricingModel: 'subscription',
+    minMonthlyPrice: 49,
+    hasFreeTier: false,
+    hasFreeTrial: true,
+    features: ['Content Writing', 'Brand Voice', 'SEO', 'Campaigns'],
+    userRating: 4.0,
+    ratingSource: 'Capterra',
+    ratingCount: 1800,
+    affiliateUrl: 'https://jasper.ai',
+    discountPercentage: 25,
+    similarityReason: 'Content-focused with marketing tools',
+  },
+  {
+    name: 'Writesonic',
+    slug: 'writesonic',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: 16,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Content Writing', 'SEO', 'Chat', 'AI Article Writer'],
+    userRating: 4.4,
+    ratingSource: 'G2',
+    ratingCount: 1900,
+    affiliateUrl: 'https://writesonic.com',
+    discountPercentage: null,
+    similarityReason: 'Affordable content generation',
+  },
+  {
+    name: 'Copy.ai',
+    slug: 'copyai',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: 36,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Content Writing', 'Workflows', 'Brand Voice', 'Sales Copy'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 2400,
+    affiliateUrl: 'https://copy.ai',
+    discountPercentage: null,
+    similarityReason: 'Workflow automation for content teams',
+  },
+  {
+    name: 'Rytr',
+    slug: 'rytr',
+    logoUrl: null,
+    pricingModel: 'freemium',
+    minMonthlyPrice: 9,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Content Writing', 'Tone Control', 'Plagiarism Check'],
+    userRating: 4.6,
+    ratingSource: 'TrustPilot',
+    ratingCount: 1500,
+    affiliateUrl: 'https://rytr.me',
+    discountPercentage: 40,
+    similarityReason: 'Budget-friendly with strong free tier',
+  },
+  {
+    name: 'Notion AI',
+    slug: 'notion-ai',
+    logoUrl: null,
+    pricingModel: 'subscription',
+    minMonthlyPrice: 10,
+    hasFreeTier: false,
+    hasFreeTrial: false,
+    features: ['Note Taking', 'Text Generation', 'Q&A', 'Database'],
+    userRating: 4.3,
+    ratingSource: 'G2',
+    ratingCount: 4200,
+    affiliateUrl: 'https://notion.so',
+    discountPercentage: null,
+    similarityReason: 'Integrated AI in workspace',
+  },
+];
+
+const mockEmpty: AlternativeTool[] = [];
+---
+
+<BaseLayout
+  title="ChatGPT Alternatives — Compare AI Chat Tools"
+  description="Structured comparison of ChatGPT alternatives: pricing, features, ratings, and more."
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Alternatives', href: '/alternatives/' },
+      { label: 'ChatGPT Alternatives', href: '/alternatives/chatgpt/' },
+    ]}
+  />
+
+  <article class="max-w-7xl mx-auto px-4 py-8">
+    <!-- 页面标题 -->
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        ChatGPT Alternatives
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        Compare the best ChatGPT alternatives side by side. Pricing, core features,
+        user ratings, and more — all in one structured table.
+      </p>
+    </header>
+
+    <!-- JSON-LD 结构化数据 -->
+    <JsonLd
+      type="product"
+      products={mockAlternatives.map((alt) => ({
+        name: alt.name,
+        description: alt.similarityReason || `Alternative to ChatGPT`,
+        ratingValue: alt.userRating || 0,
+        reviewCount: alt.ratingCount,
+        ...(alt.minMonthlyPrice ? { price: String(alt.minMonthlyPrice) } : {}),
+        url: `/go/${alt.slug}/`,
+      }))}
+    />
+
+    <!-- 核心对比表 —— 完整 12 个替代品 -->
+    <section class="mb-16">
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Top Alternatives
+      </h2>
+      <ComparisonTable
+        sourceToolName="ChatGPT"
+        alternatives={mockAlternatives}
+      />
+    </section>
+
+    <!-- 空状态测试 —— 0 个替代品 -->
+    <section>
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Empty State Test
+      </h2>
+      <ComparisonTable
+        sourceToolName="Unknown Tool"
+        alternatives={mockEmpty}
+      />
+    </section>
+  </article>
+</BaseLayout>

@@ -1,0 +1,164 @@
+---
+import '../styles/global.css';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+// 模拟数据——首页展示的热门工具，后续从 Supabase 拉取
+const featuredTools = [
+  { name: 'ChatGPT', slug: 'chatgpt', category: 'Text Generation', altCount: 12 },
+  { name: 'Midjourney', slug: 'midjourney', category: 'Image Generation', altCount: 8 },
+  { name: 'Jasper', slug: 'jasper', category: 'Content Writing', altCount: 10 },
+  { name: 'Copy.ai', slug: 'copy-ai', category: 'Content Writing', altCount: 9 },
+  { name: 'Notion AI', slug: 'notion-ai', category: 'Productivity', altCount: 7 },
+  { name: 'GitHub Copilot', slug: 'github-copilot', category: 'Code Assistant', altCount: 11 },
+];
+
+const categories = [
+  { name: 'Text Generation', slug: 'text-generation', count: 45, icon: 'T' },
+  { name: 'Image Generation', slug: 'image-generation', count: 32, icon: 'I' },
+  { name: 'Code Assistant', slug: 'code-assistant', count: 28, icon: 'C' },
+  { name: 'Content Writing', slug: 'content-writing', count: 36, icon: 'W' },
+  { name: 'Video Generation', slug: 'video-generation', count: 18, icon: 'V' },
+  { name: 'Productivity', slug: 'productivity', count: 24, icon: 'P' },
+];
+---
+
+<BaseLayout
+  title="aiternatives — Find the Best AI Tool Alternatives"
+  description="Structured comparison tables for AI tools. Compare pricing, features, ratings, and find better alternatives. Updated daily."
+>
+  <main>
+    <!-- ========== Hero 区域 ========== -->
+    <section class="max-w-7xl mx-auto px-4 pt-20 pb-16 text-center">
+      <h1 class="text-5xl md:text-[56px] font-semibold tracking-[-1.2px] leading-[1.1] text-[var(--text-primary)]">
+        Find Better AI Tools
+      </h1>
+      <p class="mt-5 text-lg md:text-xl text-[var(--text-secondary)] max-w-2xl mx-auto leading-relaxed">
+        Tired of your current AI tool? Compare pricing, features, and ratings across alternatives — all in one structured table. No more opening 10 tabs.
+      </p>
+      <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/alternatives/"
+          class="inline-flex items-center gap-2 px-6 py-2.5 text-[14px] font-medium text-white rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          style="background: var(--accent);"
+        >
+          Browse Alternatives
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </a>
+        <a
+          href="/deals/"
+          class="inline-flex items-center gap-2 px-6 py-2.5 text-[14px] font-medium text-[var(--text-secondary)] rounded-md border transition-all duration-200 hover:bg-[var(--bg-hover)]"
+          style="border-color: rgba(0,0,0,0.12);"
+        >
+          View Deals
+        </a>
+      </div>
+    </section>
+
+    <!-- ========== 热门替代方案 ========== -->
+    <section class="max-w-7xl mx-auto px-4 pb-20">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-[28px] font-semibold tracking-[-0.56px] text-[var(--text-primary)]">
+          Popular Alternatives
+        </h2>
+        <a
+          href="/alternatives/"
+          class="text-[14px] font-medium text-[var(--accent)] hover:underline"
+        >
+          View all
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {featuredTools.map((tool) => (
+          <a
+            href={`/alternatives/${tool.slug}/`}
+            class="group block p-5 rounded-lg bg-white transition-all duration-200 hover:-translate-y-0.5"
+            style="box-shadow: 0 0 0 1px rgba(0,0,0,0.07);"
+          >
+            <div class="flex items-start justify-between mb-3">
+              <div>
+                <h3 class="text-[16px] font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
+                  {tool.name} Alternatives
+                </h3>
+                <p class="text-[13px] text-[var(--text-tertiary)] mt-0.5">{tool.category}</p>
+              </div>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-[var(--text-disabled)] group-hover:text-[var(--accent)] transition-colors flex-shrink-0 mt-0.5" aria-hidden="true">
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-[13px] text-[var(--text-tertiary)]">
+                {tool.altCount} alternatives
+              </span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-[var(--accent-light)] text-[var(--accent)]">
+                Compare
+              </span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ========== 品类导航 ========== -->
+    <section id="categories" class="max-w-7xl mx-auto px-4 pb-20">
+      <h2 class="text-[28px] font-semibold tracking-[-0.56px] text-[var(--text-primary)] mb-8">
+        Browse by Category
+      </h2>
+
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        {categories.map((cat) => (
+          <a
+            href={`/categories/${cat.slug}/`}
+            class="group flex flex-col items-center gap-3 p-5 rounded-lg bg-white text-center transition-all duration-200 hover:-translate-y-0.5"
+            style="box-shadow: 0 0 0 1px rgba(0,0,0,0.07);"
+          >
+            <div
+              class="w-10 h-10 rounded-lg flex items-center justify-center text-[15px] font-semibold transition-colors"
+              style="background: var(--accent-light); color: var(--accent);"
+            >
+              {cat.icon}
+            </div>
+            <div>
+              <h3 class="text-[14px] font-medium text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
+                {cat.name}
+              </h3>
+              <p class="text-[12px] text-[var(--text-tertiary)] mt-0.5">
+                {cat.count} tools
+              </p>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- ========== 价值主张底栏 ========== -->
+    <section class="max-w-7xl mx-auto px-4 pb-20">
+      <div
+        class="rounded-xl p-8 md:p-12 text-center"
+        style="background: var(--accent-light);"
+      >
+        <h2 class="text-[24px] font-semibold tracking-[-0.48px] text-[var(--text-primary)]">
+          Stop opening 10 tabs to compare tools
+        </h2>
+        <p class="mt-3 text-[15px] text-[var(--text-secondary)] max-w-xl mx-auto leading-relaxed">
+          Every comparison page on aiternatives is structured with the same dimensions — pricing, features, ratings, and direct links. Find your next tool in under 60 seconds.
+        </p>
+        <a
+          href="/alternatives/"
+          class="inline-flex items-center gap-2 mt-6 px-6 py-2.5 text-[14px] font-medium text-white rounded-md transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+          style="background: var(--accent);"
+        >
+          Start Comparing
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M5 12h14"/>
+            <path d="m12 5 7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </section>
+  </main>
+</BaseLayout>

@@ -1,0 +1,98 @@
+---
+// =============================================================================
+// JsonLd.astro — 动态 JSON-LD 结构化数据
+// 支持：BreadcrumbList、FAQ、Product（含 AggregateRating）
+// =============================================================================
+
+export interface BreadcrumbItem {
+  name: string;
+  url: string;
+}
+
+export interface FAQItem {
+  question: string;
+  answer: string;
+}
+
+export interface ProductReview {
+  name: string;
+  description: string;
+  ratingValue: number;
+  reviewCount: number;
+  price?: string;
+  url?: string;
+}
+
+export interface Props {
+  type: 'breadcrumb' | 'faq' | 'product';
+  breadcrumb?: BreadcrumbItem[];
+  faq?: FAQItem[];
+  products?: ProductReview[];
+}
+
+const { type, breadcrumb = [], faq = [], products = [] } = Astro.props;
+
+let jsonLd = {};
+
+if (type === 'breadcrumb' && breadcrumb.length > 0) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: breadcrumb.map((item, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      name: item.name,
+      item: item.url,
+    })),
+  };
+}
+
+if (type === 'faq' && faq.length > 0) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: f.answer,
+      },
+    })),
+  };
+}
+
+if (type === 'product' && products.length > 0) {
+  jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    itemListElement: products.map((p, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Product',
+        name: p.name,
+        description: p.description,
+        ...(p.url ? { url: p.url } : {}),
+        ...(p.price ? {
+          offers: {
+            '@type': 'Offer',
+            price: p.price,
+            priceCurrency: 'USD',
+          },
+        } : {}),
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: p.ratingValue,
+          reviewCount: p.reviewCount,
+          bestRating: 5,
+          worstRating: 1,
+        },
+      },
+    })),
+  };
+}
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(jsonLd)} is:inline>
+</script>

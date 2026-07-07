@@ -1,0 +1,177 @@
+---
+import '../../styles/global.css';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import type { AlternativeTool } from '../../components/alternatives/ComparisonTable.astro';
+
+
+const alternatives: AlternativeTool[] = [
+  {
+    name: 'DALL-E 3',
+    slug: 'dalle-3',
+    pricingModel: 'usage_based',
+    minMonthlyPrice: null,
+    hasFreeTier: false,
+    hasFreeTrial: false,
+    features: ['Text-to-Image', 'Inpainting', 'ChatGPT Integration', 'High Resolution'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 3200,
+    affiliateUrl: 'https://openai.com/dall-e-3',
+    discountPercentage: null,
+    similarityReason: 'Most direct competitor with ChatGPT integration',
+  },
+  {
+    name: 'Stable Diffusion',
+    slug: 'stable-diffusion',
+    pricingModel: 'free',
+    minMonthlyPrice: null,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Open Source', 'Local Hosting', 'Fine-tuning', 'Community Models', 'Txt2Img'],
+    userRating: 4.6,
+    ratingSource: 'ProductHunt',
+    ratingCount: 8900,
+    affiliateUrl: 'https://stability.ai',
+    discountPercentage: null,
+    similarityReason: 'Open source with full control over models',
+  },
+  {
+    name: 'Leonardo AI',
+    slug: 'leonardo-ai',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 12,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Image Generation', 'Fine-tuning', 'Canvas Editor', 'Community Feed'],
+    userRating: 4.7,
+    ratingSource: 'G2',
+    ratingCount: 4500,
+    affiliateUrl: 'https://leonardo.ai',
+    discountPercentage: 25,
+    similarityReason: 'Best UI/UX with free daily credits',
+  },
+  {
+    name: 'Adobe Firefly',
+    slug: 'adobe-firefly',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 4.99,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Generative Fill', 'Text Effects', 'Photoshop Integration', 'Commercial Safe'],
+    userRating: 4.3,
+    ratingSource: 'TrustPilot',
+    ratingCount: 2100,
+    affiliateUrl: 'https://firefly.adobe.com',
+    discountPercentage: null,
+    similarityReason: 'Commercial-safe images with Adobe ecosystem',
+  },
+  {
+    name: 'Ideogram',
+    slug: 'ideogram',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 8,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Text Rendering', 'Image Generation', 'Remix', 'Describe'],
+    userRating: 4.4,
+    ratingSource: 'ProductHunt',
+    ratingCount: 1800,
+    affiliateUrl: 'https://ideogram.ai',
+    discountPercentage: null,
+    similarityReason: 'Best text-in-image rendering',
+  },
+  {
+    name: 'Recraft',
+    slug: 'recraft',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 12,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Vector Graphics', 'Brand Kit', 'Style Control', 'Templates'],
+    userRating: 4.5,
+    ratingSource: 'G2',
+    ratingCount: 960,
+    affiliateUrl: 'https://recraft.ai',
+    discountPercentage: 30,
+    similarityReason: 'Vector + raster in one tool',
+  },
+  {
+    name: 'Playground AI',
+    slug: 'playground-ai',
+    pricingModel: 'freemium',
+    minMonthlyPrice: 12,
+    hasFreeTier: true,
+    hasFreeTrial: false,
+    features: ['Canvas Editor', 'Image Generation', 'Mixed Media', 'Templates'],
+    userRating: 4.2,
+    ratingSource: 'G2',
+    ratingCount: 1500,
+    affiliateUrl: 'https://playground.com',
+    discountPercentage: null,
+    similarityReason: 'Canvas-first approach with editing tools',
+  },
+  {
+    name: 'Runway ML',
+    slug: 'runway-ml',
+    pricingModel: 'subscription',
+    minMonthlyPrice: 15,
+    hasFreeTier: true,
+    hasFreeTrial: true,
+    features: ['Video Generation', 'Image Generation', 'Motion Brush', 'Green Screen'],
+    userRating: 4.4,
+    ratingSource: 'G2',
+    ratingCount: 2800,
+    affiliateUrl: 'https://runwayml.com',
+    discountPercentage: null,
+    similarityReason: 'Video + image generation in one suite',
+  },
+];
+
+---
+
+<BaseLayout
+  title="Midjourney Alternatives — 8 Best AI Image Generators Compared"
+  description="Compare the best Midjourney alternatives. Side-by-side pricing, features, and ratings for DALL-E 3, Stable Diffusion, Leonardo AI, and more."
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Alternatives', href: '/alternatives/' },
+      { label: 'Midjourney Alternatives', href: '/alternatives/midjourney/' },
+    ]}
+  />
+
+  <article class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        Midjourney Alternatives
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        Midjourney is a leader in AI image generation, but it is not the only option. Compare 8 alternatives across pricing, features, and user ratings to find the one that fits your workflow.
+      </p>
+    </header>
+
+    <!-- JSON-LD 结构化数据 -->
+    <JsonLd
+      type="product"
+      products={alternatives.map((alt) => ({
+        name: alt.name,
+        description: alt.similarityReason || `Alternative to Midjourney`,
+        ratingValue: alt.userRating || 0,
+        reviewCount: alt.ratingCount,
+        ...(alt.minMonthlyPrice ? { price: String(alt.minMonthlyPrice) } : {}),
+        url: `/go/${alt.slug}/`,
+      }))}
+    />
+
+    <section class="mb-16">
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Top Alternatives
+      </h2>
+      <ComparisonTable sourceToolName="Midjourney" alternatives={alternatives} />
+    </section>
+  </article>
+</BaseLayout>

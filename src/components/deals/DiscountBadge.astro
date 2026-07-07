@@ -1,0 +1,39 @@
+---
+// =============================================================================
+// DiscountBadge.astro — 独立折扣徽章组件
+// 可在对比表和折扣页复用
+// =============================================================================
+
+export interface Props {
+  percentage: number;
+  size?: 'sm' | 'md';
+}
+
+const { percentage, size = 'sm' } = Astro.props;
+const isSm = size === 'sm';
+---
+
+<span
+  class:list={[
+    'discount-badge inline-flex items-center rounded flex-shrink-0 font-medium',
+    isSm ? 'text-[11px] px-[7px] py-[1px]' : 'text-[13px] px-[9px] py-[2px]',
+  ]}
+  style="background: var(--discount-bg); color: var(--discount-text); border: 1px solid var(--discount-border);"
+>
+  {percentage}% OFF
+</span>
+
+<style>
+  .discount-badge {
+    animation: badge-pulse 2s ease-in-out infinite;
+  }
+  @keyframes badge-pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .discount-badge {
+      animation: none;
+    }
+  }
+</style>

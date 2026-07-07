@@ -1,0 +1,25 @@
+# build output
+dist/
+
+# dependencies
+node_modules/
+
+# astro cache
+.astro/
+
+# workbuddy internal
+.workbuddy/
+
+# env
+.env
+.env.*
+!.env.example
+
+# IDE
+.idea/
+.vscode/
+.DS_Store
+
+# logs & reports
+*.log
+review_results.json
