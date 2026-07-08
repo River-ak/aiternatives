@@ -1,0 +1,32 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/seo/Breadcrumb.astro';
+---
+
+<BaseLayout
+  title="Privacy Policy — aiternatives"
+  description="Privacy policy for aiternatives.com. Learn how we handle data."
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Privacy Policy', href: '/privacy/' }]} />
+
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-[40px] font-semibold leading-[1.2] tracking-[-0.8px]">Privacy Policy</h1>
+    <p class="mt-2 text-[var(--text-tertiary)] text-sm">Last updated: July 2026</p>
+
+    <section class="mt-10 space-y-6 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+      <p>aiternatives ("we", "our", or "us") operates the website aiternatives.com. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our service.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">Information We Collect</h2>
+      <p>We do not require user accounts or collect personal information directly. We use <strong>Plausible Analytics</strong>, a privacy-first analytics service that does not use cookies and does not track personal data.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">Affiliate Links</h2>
+      <p>Some links on this site are affiliate links. This means we may earn a commission at no extra cost to you if you make a purchase through these links. We only recommend products we believe provide value.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">Third-Party Services</h2>
+      <p>We link to third-party websites (AI tool providers). We are not responsible for their privacy practices. Please review their policies before providing any personal information.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">Contact</h2>
+      <p>For questions about this policy, contact us at <a href="mailto:hello@aiternatives.com" class="text-[var(--accent)] underline">hello@aiternatives.com</a>.</p>
+    </section>
+  </article>
+</BaseLayout>

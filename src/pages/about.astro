@@ -1,0 +1,30 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Breadcrumb from '../components/seo/Breadcrumb.astro';
+---
+
+<BaseLayout
+  title="About — aiternatives"
+  description="About aiternatives — your structured AI tool comparison engine."
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'About', href: '/about/' }]} />
+
+  <article class="max-w-3xl mx-auto px-4 py-12">
+    <h1 class="text-[40px] font-semibold leading-[1.2] tracking-[-0.8px]">About aiternatives</h1>
+
+    <section class="mt-10 space-y-6 text-[15px] leading-relaxed text-[var(--text-secondary)]">
+      <p class="text-lg text-[var(--text-primary)] font-medium">We help you find better AI tools — faster.</p>
+
+      <p>When an AI tool raises its prices, shuts down, or simply doesn't fit your needs, finding the right alternative shouldn't take 30 minutes of tab-switching. That's why we built aiternatives.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">What We Do</h2>
+      <p>We create <strong>structured comparison tables</strong> for AI tools. Each page shows you pricing, features, user ratings, and the key differences between alternatives — all in one view. No fluff, no affiliate-driven rankings.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">How We Make Money</h2>
+      <p>aiternatives is free to use. We earn through <strong>affiliate commissions</strong> — when you click through and purchase a tool, we may receive a commission at no extra cost to you. This does not influence our tool rankings or recommendations.</p>
+
+      <h2 class="text-[22px] font-semibold text-[var(--text-primary)]">Our Data</h2>
+      <p>We update our tool database daily using automated agents that scan new AI tool releases, pricing changes, and community recommendations. Found an error? <a href="mailto:hello@aiternatives.com" class="text-[var(--accent)] underline">Let us know</a>.</p>
+    </section>
+  </article>
+</BaseLayout>
