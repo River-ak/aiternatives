@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ComparisonTable from '../../components/alternatives/ComparisonTable.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import JsonLd from '../../components/seo/JsonLd.astro';
+import { supabase, getAlternativesForSource } from '../../lib/supabase';
+import type { GetStaticPaths } from 'astro';
+
+// 构建时生成所有替代方案页
+export const getStaticPaths = (async () => {
+  const { data, error } = await supabase
+    .from('tools')
+    .select('slug, name')
+    .eq('is_active', true)
+    .returns<{ slug: string; name: string }[]>();
+
+  if (error || !data) return [];
+
+  const hardcoded = new Set(['chatgpt', 'midjourney', 'jasper', 'copy-ai', 'notion-ai']);
+  const filtered = data.filter((t) => !hardcoded.has(t.slug));
+
+  return filtered.map((tool) => ({
+    params: { slug: tool.slug },
+    props: { toolName: tool.name, toolSlug: tool.slug },
+  }));
+}) satisfies GetStaticPaths;
+
+const { toolName, toolSlug } = Astro.props as {
+  toolName: string;
+  toolSlug: string;
+};
+
+const alternatives = await getAlternativesForSource(toolSlug);
+const displayName = toolName;
+---
+
+<BaseLayout
+  title={`${displayName} Alternatives — Compare AI ${displayName} Alternatives`}
+  description={`Looking for ${displayName} alternatives? Compare pricing, features, and ratings across ${alternatives.length} tools in one structured comparison table.`}
+>
+  <Breadcrumb
+    items={[
+      { label: 'Home', href: '/' },
+      { label: 'Alternatives', href: '/alternatives/' },
+      { label: `${displayName} Alternatives`, href: `/alternatives/${toolSlug}/` },
+    ]}
+  />
+
+  <article class="max-w-7xl mx-auto px-4 py-8">
+    <header class="mb-10">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        {displayName} Alternatives
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        {
+          alternatives.length > 0
+            ? `Compare ${alternatives.length} ${displayName} alternatives side by side. Pricing, features, ratings, and more — all in one structured table.`
+            : `We are building our comparison data for ${displayName}. Check back soon for detailed alternatives.`
+        }
+      </p>
+    </header>
+
+    <!-- JSON-LD -->
+    {
+      alternatives.length > 0 && (
+        <JsonLd
+          type="product"
+          products={alternatives.map((alt) => ({
+            name: alt.name,
+            description: alt.similarityReason || `Alternative to ${displayName}`,
+            ratingValue: alt.userRating || 0,
+            reviewCount: alt.ratingCount,
+            ...(alt.minMonthlyPrice ? { price: String(alt.minMonthlyPrice) } : {}),
+            url: `/go/${alt.slug}/`,
+          }))}
+        />
+      )
+    }
+
+    <!-- 对比表 -->
+    <section class="mb-16">
+      <h2 class="text-[28px] font-semibold leading-[1.2] tracking-[-0.56px] mb-8">
+        Top Alternatives
+      </h2>
+      <ComparisonTable
+        sourceToolName={displayName}
+        alternatives={alternatives}
+      />
+    </section>
+  </article>
+</BaseLayout>
