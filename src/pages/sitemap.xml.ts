@@ -9,12 +9,21 @@ const pages = [
   { path: '/', priority: 1.0, changefreq: 'daily' },
   { path: '/alternatives/', priority: 0.9, changefreq: 'daily' },
   { path: '/deals/', priority: 0.8, changefreq: 'daily' },
-  // 5 个标杆替代方案页
+  { path: '/about/', priority: 0.6, changefreq: 'monthly' },
+  { path: '/privacy/', priority: 0.4, changefreq: 'monthly' },
+  // 5 标杆页
   { path: '/alternatives/chatgpt/', priority: 0.85, changefreq: 'daily' },
   { path: '/alternatives/midjourney/', priority: 0.85, changefreq: 'daily' },
   { path: '/alternatives/jasper/', priority: 0.85, changefreq: 'daily' },
   { path: '/alternatives/copy-ai/', priority: 0.85, changefreq: 'daily' },
   { path: '/alternatives/notion-ai/', priority: 0.85, changefreq: 'daily' },
+  // 品类页
+  { path: '/categories/text_gen/', priority: 0.8, changefreq: 'daily' },
+  { path: '/categories/image_gen/', priority: 0.8, changefreq: 'daily' },
+  { path: '/categories/code_assist/', priority: 0.8, changefreq: 'daily' },
+  { path: '/categories/content_writing/', priority: 0.8, changefreq: 'daily' },
+  { path: '/categories/video_gen/', priority: 0.8, changefreq: 'daily' },
+  { path: '/categories/productivity/', priority: 0.8, changefreq: 'daily' },
 ];
 
 const siteUrl = 'https://aiternatives.com';

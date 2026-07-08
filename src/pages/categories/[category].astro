@@ -1,0 +1,129 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/seo/Breadcrumb.astro';
+import { supabase } from '../../lib/supabase';
+import type { GetStaticPaths } from 'astro';
+
+export const getStaticPaths = (() => {
+  return [
+    { params: { category: 'text_gen' }, props: { category: 'text_gen' } },
+    { params: { category: 'image_gen' }, props: { category: 'image_gen' } },
+    { params: { category: 'code_assist' }, props: { category: 'code_assist' } },
+    { params: { category: 'content_writing' }, props: { category: 'content_writing' } },
+    { params: { category: 'video_gen' }, props: { category: 'video_gen' } },
+    { params: { category: 'productivity' }, props: { category: 'productivity' } },
+  ];
+}) satisfies GetStaticPaths;
+
+const { category } = Astro.props as { category: string };
+
+const CATEGORIES: Record<string, { name: string; description: string; icon: string }> = {
+  text_gen: { name: 'Text Generation', description: 'AI-powered chat, text generation, and LLM platforms', icon: 'T' },
+  image_gen: { name: 'Image Generation', description: 'AI image creation, editing, and design tools', icon: 'I' },
+  code_assist: { name: 'Code Assistant', description: 'AI coding assistants, IDE integrations, and developer tools', icon: 'C' },
+  content_writing: { name: 'Content Writing', description: 'AI writing, editing, and content creation tools', icon: 'W' },
+  video_gen: { name: 'Video Generation', description: 'AI video creation, editing, and avatar tools', icon: 'V' },
+  productivity: { name: 'Productivity', description: 'AI-enhanced productivity, notes, and workspace tools', icon: 'P' },
+};
+
+const catInfo = CATEGORIES[category] || { name: category, description: '', icon: '?' };
+
+const { data: tools } = await supabase
+  .from('tools')
+  .select('name, slug, description, pricing_model, min_monthly_price, user_rating, rating_source, rating_count, features')
+  .eq('category', category)
+  .eq('is_active', true)
+  .order('user_rating', { ascending: false })
+  .limit(50);
+---
+
+<BaseLayout
+  title={`AI ${catInfo.name} Tools — Best ${catInfo.name} Tools Compared`}
+  description={`Browse ${tools?.length || 0} AI ${catInfo.name.toLowerCase()} tools. Compare pricing, features, and ratings to find the best fit for your needs.`}
+>
+  <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: catInfo.name, href: `/categories/${category}/` }]} />
+
+  <article class="max-w-7xl mx-auto px-4 py-12">
+    <header class="mb-12">
+      <h1 class="text-[48px] font-semibold leading-[1.1] tracking-[-1.2px]">
+        AI {catInfo.name} Tools
+      </h1>
+      <p class="mt-4 text-lg text-[var(--text-secondary)] max-w-2xl leading-relaxed">
+        {catInfo.description}. Browse {tools?.length || 0} tools with pricing, features, and user ratings.
+      </p>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        tools?.map((tool) => (
+          <a
+            href={`/alternatives/${tool.slug}/`}
+            class="block p-5 rounded-xl bg-white border border-[rgba(0,0,0,0.06)] hover:border-[var(--accent)] hover:shadow-sm transition-all duration-150 group"
+          >
+            <div class="flex items-start justify-between gap-3">
+              <div>
+                <h3 class="text-[16px] font-semibold text-[var(--text-primary)] group-hover:text-[var(--accent)] transition-colors">
+                  {tool.name}
+                </h3>
+                {
+                  tool.description && (
+                    <p class="mt-1 text-[13px] text-[var(--text-tertiary)] line-clamp-2">
+                      {tool.description}
+                    </p>
+                  )
+                }
+              </div>
+              {
+                tool.user_rating && (
+                  <span class={`flex-shrink-0 text-[13px] font-semibold px-2 py-0.5 rounded-md ${
+                    tool.user_rating >= 4.5 ? 'bg-[var(--rating-excellent)]' :
+                    tool.user_rating >= 4.0 ? 'bg-[var(--rating-good)]' :
+                    'bg-[var(--rating-average)]'
+                  } text-[var(--text-primary)]`}>
+                    {tool.user_rating}
+                  </span>
+                )
+              }
+            </div>
+
+            <div class="mt-3 flex items-center gap-2 flex-wrap">
+              {
+                tool.pricing_model && (
+                  <span class="text-[11px] font-medium px-2 py-0.5 rounded bg-[var(--bg-subtle)] text-[var(--text-tertiary)]">
+                    {tool.pricing_model === 'freemium' ? 'Freemium' : tool.pricing_model === 'subscription' ? 'Subscription' : tool.pricing_model === 'free' ? 'Free' : tool.pricing_model.replace('_', ' ')}
+                  </span>
+                )
+              }
+              {
+                tool.min_monthly_price != null && (
+                  <span class="text-[11px] font-medium text-[var(--text-tertiary)] font-mono tabular-nums">
+                    From ${tool.min_monthly_price}/mo
+                  </span>
+                )
+              }
+            </div>
+
+            <div class="mt-3 flex items-center gap-1">
+              {
+                (tool.features as string[])?.slice(0, 3).map((f: string) => (
+                  <span class="text-[11px] px-1.5 py-0.5 rounded bg-[var(--bg-hover)] text-[var(--text-tertiary)]">
+                    {f}
+                  </span>
+                ))
+              }
+            </div>
+          </a>
+        ))
+      }
+    </div>
+
+    {
+      (!tools || tools.length === 0) && (
+        <div class="text-center py-20 text-[var(--text-tertiary)]">
+          <p class="text-lg">No tools found in this category yet.</p>
+          <p class="mt-2 text-sm">We're adding new tools daily — check back soon.</p>
+        </div>
+      )
+    }
+  </article>
+</BaseLayout>
